@@ -31,7 +31,7 @@ public class AHITCrowdControlEffectsPack : SimpleTCPPack
         new Effect("Disable Weapon (15 sec)", "disable_weapon"),
         new Effect("Lose Hat (20 sec)", "lose_hat"),
         new Effect("Babysitting (20 sec)", "babysit"),
-		new Effect("Parade (30 sec)", "parade_owls"),
+        new Effect("Parade (30 sec)", "parade_owls"),
         new Effect("Go Fast (30 sec)", "go_fast"),
         new Effect("Go Slow (20 sec)", "go_slow"),
         new Effect("Force Time Stop (20 sec)", "time_stop"),
