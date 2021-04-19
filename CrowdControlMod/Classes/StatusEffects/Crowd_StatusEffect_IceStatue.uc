@@ -1,3 +1,5 @@
+// Turn the Player into an Ice Statue for the next 10 seconds. (Basically, the ice hat without the hat)
+// Based on the Ice Hat script from the base game.
 class Crowd_StatusEffect_IceStatue extends Crowd_StatusEffect_Persistent;
 
 const NumSpins = 2;
@@ -62,7 +64,9 @@ function bool Update(float delta)
 		HPawn.SetRotation(NewRotation);
 
 		if (HPawn.IsA('Hat_PawnCombat'))
+		{
 			Hat_PawnCombat(HPawn).SetRotationSequence.Rotation.Pitch = NewRotation.Pitch;
+		}
 	}
     return true;
 }

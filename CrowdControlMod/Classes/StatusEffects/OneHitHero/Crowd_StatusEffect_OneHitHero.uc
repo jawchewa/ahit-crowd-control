@@ -1,3 +1,4 @@
+// Based on the One Hit Hero Badge from the base game.
 class Crowd_StatusEffect_OneHitHero extends Crowd_StatusEffect_Persistent;
 
 defaultproperties

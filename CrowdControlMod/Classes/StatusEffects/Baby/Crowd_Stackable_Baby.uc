@@ -1,3 +1,4 @@
+// Based on the Stackable Baby Scripts from the base game.
 class Crowd_Stackable_Baby extends Crowd_Stackable_Animated
     placeable;
 

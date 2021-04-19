@@ -1,6 +1,9 @@
+// Make it so the Player has to carry a stack of babies for the next 20 seconds. (Similar to the Ship Shape mission from Chapter 6)
+// Based on the Stackable Scripts from the base game.
 class Crowd_StatusEffect_BabyMode extends Hat_StatusEffect;
 
 var int babyCount;
+
 defaultproperties
 {
     Duration = 20;

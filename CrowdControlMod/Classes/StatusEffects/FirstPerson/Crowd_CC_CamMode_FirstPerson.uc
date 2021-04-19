@@ -1,3 +1,4 @@
+// Based on the First Person Camera Badge Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=1765599993
 class Crowd_CC_CamMode_FirstPerson extends Hat_CamMode_Script;
 
 var bool isFocus;
@@ -50,7 +51,8 @@ function bool IgnorePlayerMovement(Hat_PlayerCamera_Base c)
     return false;
 }
 
-function OnLeaveFocus(Hat_PlayerCamera_Base c) {
+function OnLeaveFocus(Hat_PlayerCamera_Base c)
+{
     HideStuff(Hat_PlayerCamera(c).PCOwner.Pawn, false);
 	isFocus = false;
     if (Hat_Player(Hat_PlayerCamera(c).PCOwner.Pawn).CarriedObject != None)
@@ -66,7 +68,8 @@ function OnGainFocus(Hat_PlayerCamera_Base c, const Pawn TPawn) {
 	Carried.SetDrawScale3D(vect(0.4,0.4,0.4));
 }
 
-function HideStuff(Pawn p, bool fp) {
+function HideStuff(Pawn p, bool fp)
+{
     local Hat_CosmeticItem inv;
     local Hat_PlayerCustomizable pawnc;
 

@@ -1,3 +1,4 @@
+// Based on the First Person Camera Badge Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=1765599993
 class Crowd_StatusEffect_FirstPerson extends Crowd_StatusEffect_Persistent;
 
 defaultproperties

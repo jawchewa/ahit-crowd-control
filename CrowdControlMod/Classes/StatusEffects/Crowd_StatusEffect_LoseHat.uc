@@ -1,4 +1,4 @@
-//Take away the player's ability to use their hat for 20 seconds.
+// Take away the player's ability to use their hat for 20 seconds.
 class Crowd_StatusEffect_LoseHat extends Crowd_StatusEffect_Persistent;
 
 defaultproperties
@@ -29,7 +29,9 @@ function OnAdded(Actor a)
 		invm.Hat = None;
 	}
 	for (i = 0; i < invm.Badges.Length; i++)
+	{
 		invm.Badges[i].SetOcclusionHidden(true);
+	}
 }
 
 simulated function OnRemoved(Actor a)

@@ -1,3 +1,5 @@
+// Forces the player to constantly bounce as if the whole world was a spring.
+// Based on the code for the Spring Badge Mod which can be found here: https://steamcommunity.com/sharedfiles/filedetails/?id=2422565858
 class Crowd_StatusEffect_SpringBounce extends Crowd_StatusEffect_Persistent;
 
 var Interaction KeyCaptureInteraction;
@@ -7,7 +9,8 @@ defaultproperties
     Duration = 20;
 }
 
-function OnLanded(optional bool UnusualScenario) {
+function OnLanded(optional bool UnusualScenario)
+{
     class'WorldInfo'.static.GetWorldInfo().Game.SetTimer(0.01, false, NameOf(Bounce), self);
 }
 
@@ -46,7 +49,8 @@ function Bounce()
     }
 }
 
-function OnHitWall(vector HitNormal, actor Wall, PrimitiveComponent WallComp) {
+function OnHitWall(vector HitNormal, actor Wall, PrimitiveComponent WallComp)
+{
     local Hat_Player ply;
 
     ply = Hat_Player(Owner);
@@ -56,7 +60,8 @@ function OnHitWall(vector HitNormal, actor Wall, PrimitiveComponent WallComp) {
     ply.WallJumpCount = 1;
 }
 
-function RegisterKeyEvent(){
+function RegisterKeyEvent()
+{
     local int iInput;
     local Hat_PlayerController pc;
     pc = Hat_PlayerController(Hat_Player(Owner).Controller);

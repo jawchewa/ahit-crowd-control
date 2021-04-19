@@ -1,3 +1,4 @@
+//Reverse the Player's controls for the next 20 seconds (Left is Right, Up is Down. For both movement and camera controls)
 class Crowd_StatusEffect_ReverseControls extends Crowd_StatusEffect_Persistent;
 
 defaultproperties

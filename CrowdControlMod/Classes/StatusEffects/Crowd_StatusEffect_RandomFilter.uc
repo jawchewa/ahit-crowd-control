@@ -1,3 +1,6 @@
+// Apply a random screen filter/effect for the next 30 seconds.
+// Based on the code for my playable Camera Filters Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=1303740330
+// Also based off of code for the Retro Badge, the Retro VR Badge and the Nostalgia Badge from DLC2
 class Crowd_StatusEffect_RandomFilter extends Crowd_StatusEffect_Persistent;
 
 const PostProcessMaterialEffectName = 'CameraFilterMaterialEffect';
@@ -41,7 +44,8 @@ function String GetData()
     return String(randInt)$","$String(randParam);
 }
 
-function initPostProccessSettings(Pawn pawn){
+function initPostProccessSettings(Pawn pawn)
+{
     local HUD H;
     local PlayerController pc;
     pc = PlayerController(Pawn(Owner).Controller);
@@ -121,7 +125,8 @@ function initPostProccessSettings(Pawn pawn){
     if (MaterialEffect != None)
     {
         MaterialEffect.bShowInGame = Mat != None; 
-        if(MaterialEffect.bShowInGame){
+        if(MaterialEffect.bShowInGame)
+        {
             if (MaterialEffectInstance == None || MaterialEffectInstance.Parent != Mat)
             {
                 MaterialEffectInstance = new class'MaterialInstanceConstant';
@@ -218,7 +223,8 @@ function SetPostProcessSettings(Pawn pawn)
         if (MaterialEffect != None)
         {
             MaterialEffect.bShowInGame = Mat != None; 
-            if(MaterialEffect.bShowInGame){
+            if(MaterialEffect.bShowInGame)
+            {
                 if (MaterialEffectInstance != None)
                 {
                     MaterialEffect.SetMaterial(MaterialEffectInstance);

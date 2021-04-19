@@ -1,3 +1,4 @@
+// Based on the Stackable Scripts from the base game.
 class Crowd_Stackable_Animated extends Hat_CarryObject_Stackable
     abstract;
 

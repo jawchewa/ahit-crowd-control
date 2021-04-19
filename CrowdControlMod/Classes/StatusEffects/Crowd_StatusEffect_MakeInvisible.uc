@@ -1,3 +1,4 @@
+// Make the Player turn Invisible for the next 20 seconds.
 class Crowd_StatusEffect_MakeInvisible extends Crowd_StatusEffect_Persistent;
 
 defaultproperties

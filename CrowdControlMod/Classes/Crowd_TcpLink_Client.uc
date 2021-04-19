@@ -1,5 +1,6 @@
+// This class handles all the TCP functionality for communicating with Crowd control.
 // Based on Unreal TcpLink class example by Michiel 'elmuerte' Hendriks
- 
+// https://docs.unrealengine.com/udk/Three/TcpLink.html
 class Crowd_TcpLink_Client extends TcpLink
     AlwaysLoaded;
 
@@ -12,18 +13,14 @@ var int bufferLength;
 event PostBeginPlay()
 {
     super.PostBeginPlay();
-    // Start by resolving the hostname to an IP so we can connect to it
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] Resolving: "$TargetHost);
     resolve(TargetHost);
 }
 
 event Resolved( IpAddr Addr )
 {
-    // The hostname was resolved succefully
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] "$TargetHost$" resolved to "$ IpAddrToString(Addr));
 
-    // Make sure the correct remote port is set, resolving doesn't set
-    // the port value of the IpAddr structure
     Addr.Port = TargetPort;
     
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] Bound to port: "$ BindPort());
@@ -37,9 +34,6 @@ event Resolved( IpAddr Addr )
 event ResolveFailed()
 {
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] Unable to resolve "$TargetHost);
-
-    // You could retry resolving here if you have an alternative
-    // remote host.
 }
 
 event Opened()
@@ -49,19 +43,7 @@ event Opened()
 
 event Closed()
 {
-    // In this case the remote client should have automatically closed
-    // the connection, because we requested it in the HTTP request.
-
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] event closed");
-
-    // After the connection was closed we could establish a new
-    // connection using the same TcpLink instance.
-}
-
-event DestructCleanUp()
-{
-    Close();
-    Super.DestructCleanUp();
 }
 
 event Destroyed(){
@@ -69,15 +51,7 @@ event Destroyed(){
     Super.Destroyed();
 }
 
-event ErrorQuit()
-{
-    local byte responseData[255];
-
-    responseData[0] = 0;
-    SendBinary(1, responseData);
-}
-
-
+// Main Logic to process incoming binary stream. Puts data into a buffer until we hit a null terminator. Then processes the incoming message and returns whether it was successful or not.
 event ReceivedBinary(int Count, byte B[255])
 {
     local JsonObject ParsedJson;

@@ -1,3 +1,4 @@
+// Disable the Player's ability to jump for 15 seconds.
 class Crowd_StatusEffect_NoJump extends Crowd_StatusEffect_Persistent;
 
 defaultproperties

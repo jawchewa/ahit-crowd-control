@@ -1,3 +1,5 @@
+//Slows down time to a quarter speed for 20 seconds.
+//Based on the code for the Time Stop hat from the main game.
 class Crowd_StatusEffect_TimeStop extends Crowd_StatusEffect_Persistent;
 
 const ParameterName = 'TimeStop';
@@ -17,7 +19,6 @@ var ParticleSystem TimeStopParticle;
 var ParticleSystem FootstepParticle;
 var ParticleSystem JumpParticle;
 var ParticleSystemComponent TimeStopParticleComp;
-//var MaterialInterface MeshMaterial;
 var SoundCue StartSound;
 var SoundCue EndSound;
 var SoundCue LoopSound;
@@ -160,7 +161,6 @@ function OnExitTeleport(Actor a)
 	a.CustomTimeDilation = a.default.CustomTimeDilation;
 	Pawn(a).Controller.CustomTimeDilation = a.CustomTimeDilation;
 	Hat_InventoryManager( Pawn(a).InvManager ).SetInventoryCustomTimeDilation(a.CustomTimeDilation);
-	//Hat_Pawn(a).InitMaterialInstances();
 	Hat_Pawn(a).SetMaterialScalarValue(ParameterName, 0);
 
 	if (Hat_Player(a) != None)

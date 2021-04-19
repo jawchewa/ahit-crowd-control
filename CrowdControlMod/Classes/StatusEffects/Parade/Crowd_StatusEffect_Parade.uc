@@ -1,9 +1,11 @@
-
+// Give the Player a parade of owls to follow them for the next 30 seconds. (Similar to The Big Parade mission from Chapter 2)
+// Based on the code from the Parade Badge Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=1531502590
 class Crowd_StatusEffect_Parade extends Crowd_StatusEffect_Persistent;
 
 var int MaxBirdCount;
 var Array<Crowd_Enemy_Band> birds;
 var int currentBird;
+
 defaultproperties
 {
     MaxBirdCount = 15
@@ -93,7 +95,6 @@ function bool CannotSpawn(Hat_Player player)
 	if (player.bHidden && !player.bCollideWorld && !player.bBlockActors) return true;
 	if (player.bHidden && player.CanTakeDamage(false)) return true;
 	if (player.SwampSinkProgress > 0.75) return true;
-	// note: there's no way to hook bosses pushing you away that doesn't also hook bonking into a wall, so just don't get shoved!
 	if (player.HasStatusEffect(class'Hat_StatusEffect_FreezeMovement', true)) return true;
 	if (player.HasStatusEffect(class'Hat_StatusEffect_Scared', true)) return true;
 	if (player.HasStatusEffect(class'Hat_StatusEffect_Stoning', true)) return true;

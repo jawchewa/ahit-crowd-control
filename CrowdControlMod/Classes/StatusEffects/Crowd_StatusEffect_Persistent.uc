@@ -1,3 +1,4 @@
+//This is a custom version of the Hat_StatusEffect function. This allows status effects that implement this to persist between levels.
 class Crowd_StatusEffect_Persistent extends Hat_StatusEffect;
 
 simulated function OnRemoved(Actor a)

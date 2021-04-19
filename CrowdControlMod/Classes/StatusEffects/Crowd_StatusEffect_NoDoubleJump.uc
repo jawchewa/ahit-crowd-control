@@ -1,3 +1,4 @@
+// Take away the Player's double jump for the next 15 seconds.
 class Crowd_StatusEffect_NoDoubleJump extends Crowd_StatusEffect_Persistent;
 
 defaultproperties

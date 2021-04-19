@@ -1,3 +1,5 @@
+// Based on the code from the Parade Badge Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=1531502590
+// Also just based on the band enemy script from the base game.
 class Crowd_Enemy_Band extends Crowd_Enemy_Band_Base
 	placeable;
 

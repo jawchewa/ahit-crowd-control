@@ -1,3 +1,5 @@
+// Give the Player a Dweller Sphere for the next 10 seconds. (Basically, the fox mask hat without the hat)
+// Based on the Fox Mask Script from the base game.
 class Crowd_StatusEffect_DwellerSphere extends Crowd_StatusEffect_Persistent;
 
 var SoundCue StartSound;
@@ -106,12 +108,16 @@ function SetMusicPitch2(float alpha)
 	if (MusicPitch != 1.f)
 	{
 		if (`MusicManager != None && `MusicManager.MusicTreeInstance != None)
+		{
 			`MusicManager.MusicTreeInstance.PitchMultiplier = Lerp(1.f, MusicPitch, alpha);
+		}
 	}
 	if (MusicHighFrequency != 1.f)
 	{
 		if (`MusicManager != None && `MusicManager.MusicTreeInstance != None)
+		{
 			`MusicManager.MusicTreeInstance.HighFrequencyGainMultiplier = Lerp(1.f, MusicHighFrequency, alpha);
+		}
 	}
 }
 
@@ -191,24 +197,11 @@ function PostProcessSettings GetPostProcessSettings(Pawn InPawn)
 	set.bOverride_DOF_FocusType = TRUE;
 	set.bOverride_DOF_FocusPosition = TRUE;
 
-	//set.bOverride_EnableBloom = TRUE;
-	//set.bEnableBloom = TRUE;
-	//set.bOverride_Bloom_Scale = TRUE;
-	//set.bOverride_Bloom_Threshold = TRUE;
-	//set.bOverride_DOF_BlurBloomKernelSize = TRUE;
-	//set.bOverride_Bloom_InterpolationDuration = TRUE;
-	
 	// dof
 	set.DOF_FocusInnerRadius = DoFRadius;
 	set.DOF_BlurKernelSize = 32;
 	set.DOF_FalloffExponent = DoFFalloff;
 	set.DOF_InterpolationDuration = 0.0f;
-	
-	// bloom
-	//set.Bloom_Scale = 0.2;
-	//set.Bloom_Threshold = 0.89;
-	//set.DOF_BlurBloomKernelSize = 64;
-	//set.Bloom_InterpolationDuration = 0.5f;
 	
 	set.bOverride_Scene_Colorize = true;
 	set.Scene_Colorize = vect(0.9,1.0,0.95);

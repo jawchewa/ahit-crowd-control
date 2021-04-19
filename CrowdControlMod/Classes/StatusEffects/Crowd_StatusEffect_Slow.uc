@@ -1,10 +1,10 @@
+// Slows down The player's Time Dilation to half speed.
 class Crowd_StatusEffect_Slow extends Crowd_StatusEffect_Persistent;
 
 defaultproperties
 {
     Duration = 20;
 }
-
 
 function bool Update(float delta)
 {

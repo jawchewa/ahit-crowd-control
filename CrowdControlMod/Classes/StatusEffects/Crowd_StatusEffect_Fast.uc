@@ -1,3 +1,4 @@
+// Speeds up the player's Time Dilation to double speed.
 class Crowd_StatusEffect_Fast extends Crowd_StatusEffect_Persistent;
 
 defaultproperties

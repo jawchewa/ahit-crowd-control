@@ -1,3 +1,5 @@
+// Makes the player grow to a large version of themself.
+// Also disables ladders, because ladders don't work if you're not the right height.
 class Crowd_StatusEffect_Grow extends Crowd_StatusEffect_Persistent;
 
 var bool wasCrouching;

@@ -1,3 +1,5 @@
+// Based on the code from the Parade Badge Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=1531502590
+// Also just based on the band enemy script from the base game.
 class Crowd_Enemy_Band_Base extends Actor
 	abstract;
 	
@@ -512,7 +514,9 @@ simulated function UpdateDropDown(float d)
 	Mesh.SetTranslation(Mesh.Translation + (GetDropDownTranslation(DropDownTime) - GetDropDownTranslation(prev)));
 	
 	if (DropDownTime >= 1)
+	{
 		DropDownTime = -1;
+	}
 	else if (DropDownTime >= 0.35 && prev < 0.35)
 	{
 		if (DropDownLandSound != None)

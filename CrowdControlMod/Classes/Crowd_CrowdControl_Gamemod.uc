@@ -1,6 +1,6 @@
 //Mod and Effects pack developed by Jawchewa
 
-//The gamemod class is sort of the brain of the mod. It handles everything to do with initialization as well as processing commands for crowd control.
+//The gamemod class is the brain of the mod. It handles everything to do with initialization as well as processing commands for crowd control.
 class Crowd_CrowdControl_Gamemod extends GameMod
 	config(Mods);
 
@@ -11,111 +11,15 @@ var bool hasStartedLevel;
 
 var Array<Hat_ChapterInfo> Chapters;
 
-const Debug = true;
+const Debug = false;
 
-static function Crowd_CrowdControl_Gamemod GetGameMod()
-{
-    local Crowd_CrowdControl_Gamemod mod;
-
-    foreach class'WorldInfo'.static.GetWorldInfo().DynamicActors(class'Crowd_CrowdControl_Gamemod', mod)
-    {
-		return mod;
-    }
-    
-    return None;
-}
-
-static function DebugLog(String s)
-{
-    if (Debug) class'WorldInfo'.static.GetWorldInfo().Game.Broadcast(class'Crowd_CrowdControl_Gamemod'.static.GetGameMod().GetALocalPlayerController().Pawn, s);
-}
-
-function OnModLoaded()
-{
-    if (client == None)
-    {
-        client = Spawn(class'Crowd_TcpLink_Client');
-    }
-    
-    //Need this so people don't lose access to areas when they lose timepieces.
-    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.subconforest', 7);
-    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.trainwreck_of_science', 4);
-    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.Sand_and_Sails', 14);
-    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.Mu_Finale', 25);
-    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo_DLC1.ChapterInfos.ChapterInfo_Cruise', 35);
-    SetChapterInfoCount(Hat_ChapterInfo'hatintime_chapterinfo_dlc2.ChapterInfos.ChapterInfo_Metro', 20);
-    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.MafiaTown', 0);
-}
-
-function SetChapterInfoCount(Hat_ChapterInfo chap, int defaultCount)
-{
-    if (class'Hat_SpaceshipPowerPanel'.static.IsPowerPanelActivated(chap))
-    {
-        chap.RequiredHourglassCount = 0;
-    }
-    else
-    {
-        chap.RequiredHourglassCount = defaultCount;
-    }
-}
-
-//Reset Required hourglass count when mod is unloaded.
-event OnModUnloaded()
-{
-    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.subconforest'.RequiredHourglassCount = 7;
-    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.trainwreck_of_science'.RequiredHourglassCount = 4;
-    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.Sand_and_Sails'.RequiredHourglassCount = 14;
-    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.Mu_Finale'.RequiredHourglassCount = 25;
-    Hat_ChapterInfo'HatinTime_ChapterInfo_DLC1.ChapterInfos.ChapterInfo_Cruise'.RequiredHourglassCount = 35;
-    Hat_ChapterInfo'hatintime_chapterinfo_dlc2.ChapterInfos.ChapterInfo_Metro'.RequiredHourglassCount = 20;
-    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.MafiaTown'.RequiredHourglassCount = 1;
-
-    client.Destroy();
-}
-
-function OnPostLevelIntro()
-{
-    hasStartedLevel = true;
-    LoadStatusEffects(Hat_Player(GetALocalPlayerController().Pawn));
-}
-
-function OnPreOpenHUD(HUD InHUD, out class<Object> InHUDElement)
-{
-    if(ClassIsChildOf(InHUDElement, class'Hat_HUDElementLoadingScreen'))
-    {
-        if(hasStartedLevel) client.Close();
-    }
-    else if(ClassIsChildOf(InHUDElement, class'Hat_HUDElementActTitleCard'))
-    {
-        if(hasStartedLevel) client.Close();
-    }
-}
-
-function OnPreStatusEffectAdded(Pawn PawnCombat, out class<Object> StatusEffect, optional out float OverrideDuration)
-{
-    if(ClassIsChildOf(StatusEffect, class'Hat_StatusEffect_TimeStop') && Hat_Player(PawnCombat) != None && Hat_Player(PawnCombat).HasStatusEffect(class'Crowd_StatusEffect_TimeStop'))
-    {
-        StatusEffect = None;
-    }
-    else if(ClassIsChildOf(StatusEffect, class'Hat_StatusEffect_StatueFall') && Hat_Player(PawnCombat) != None && Hat_Player(PawnCombat).HasStatusEffect(class'Hat_StatusEffect_StatueFall') && Hat_Player(PawnCombat).HasStatusEffect(class'Crowd_StatusEffect_IceStatue'))
-    {
-        StatusEffect = None;
-    }
-}
-
-function OnAbilityUsed(Pawn Player, Inventory Ability)
-{
-    if(Ability.IsA('Hat_Ability_FoxMask') && Hat_Player(Player) != None && Hat_Player(Player).HasStatusEffect(class'Crowd_StatusEffect_DwellerSphere'))
-    {
-        Hat_Ability_FoxMask(Ability).Activated = false;
-    }
-}
-
+//This is the main function for processing incoming Effect Requests.
 function int ProcessCode(String code)
 {
     local Hat_Player ply;
     ply = Hat_Player(GetALocalPlayerController().Pawn);
 
+    //Don't receive Effects until level is done loading, and deny Effects if game is paused.
     if(!hasStartedLevel || GetALocalPlayerController().IsPaused()) return 3;
 
     switch (code)
@@ -247,12 +151,90 @@ function int ProcessCode(String code)
     return 0;
 }
 
+//Spawn and Initialize the TCP Link Client when the mod is loaded.
+//Also Set Chapter Info Count to unlock areas that have already been unlocked.
+function OnModLoaded()
+{
+    if (client == None)
+    {
+        client = Spawn(class'Crowd_TcpLink_Client');
+    }
+    
+    //Need this so people don't lose access to areas when they lose timepieces.
+    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.subconforest', 7);
+    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.trainwreck_of_science', 4);
+    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.Sand_and_Sails', 14);
+    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.Mu_Finale', 25);
+    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo_DLC1.ChapterInfos.ChapterInfo_Cruise', 35);
+    SetChapterInfoCount(Hat_ChapterInfo'hatintime_chapterinfo_dlc2.ChapterInfos.ChapterInfo_Metro', 20);
+    SetChapterInfoCount(Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.MafiaTown', 0);
+}
+
+//If Area has been unlocked, set RequiredHourglassCount to 0. This is the only way to keep areas unlocked after losing timepieces.
+function SetChapterInfoCount(Hat_ChapterInfo chap, int defaultCount)
+{
+    if (class'Hat_SpaceshipPowerPanel'.static.IsPowerPanelActivated(chap))
+    {
+        chap.RequiredHourglassCount = 0;
+    }
+    else
+    {
+        chap.RequiredHourglassCount = defaultCount;
+    }
+}
+
+//Reset Required hourglass count when mod is unloaded.
+event OnModUnloaded()
+{
+    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.subconforest'.RequiredHourglassCount = 7;
+    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.trainwreck_of_science'.RequiredHourglassCount = 4;
+    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.Sand_and_Sails'.RequiredHourglassCount = 14;
+    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.Mu_Finale'.RequiredHourglassCount = 25;
+    Hat_ChapterInfo'HatinTime_ChapterInfo_DLC1.ChapterInfos.ChapterInfo_Cruise'.RequiredHourglassCount = 35;
+    Hat_ChapterInfo'hatintime_chapterinfo_dlc2.ChapterInfos.ChapterInfo_Metro'.RequiredHourglassCount = 20;
+    Hat_ChapterInfo'HatinTime_ChapterInfo.maingame.MafiaTown'.RequiredHourglassCount = 1;
+
+    client.Destroy();
+}
+
+//Wait until after level intro to allow status effects to be recieved.
+//Also, Load persistent status effects after Level Intro.
+function OnPostLevelIntro()
+{
+    hasStartedLevel = true;
+    LoadStatusEffects(Hat_Player(GetALocalPlayerController().Pawn));
+}
+
+// Don't allow base game Timestop and StatueFall status effects to be activated if custom version is activated.
+function OnPreStatusEffectAdded(Pawn PawnCombat, out class<Object> StatusEffect, optional out float OverrideDuration)
+{
+    if(ClassIsChildOf(StatusEffect, class'Hat_StatusEffect_TimeStop') && Hat_Player(PawnCombat) != None && Hat_Player(PawnCombat).HasStatusEffect(class'Crowd_StatusEffect_TimeStop'))
+    {
+        StatusEffect = None;
+    }
+    else if(ClassIsChildOf(StatusEffect, class'Hat_StatusEffect_StatueFall') && Hat_Player(PawnCombat) != None && Hat_Player(PawnCombat).HasStatusEffect(class'Hat_StatusEffect_StatueFall') && Hat_Player(PawnCombat).HasStatusEffect(class'Crowd_StatusEffect_IceStatue'))
+    {
+        StatusEffect = None;
+    }
+}
+    
+// Don't allow base gaame FoxMask Ability to be activated if custom Dweller Sphere Status Effect is active.
+function OnAbilityUsed(Pawn Player, Inventory Ability)
+{
+    if(Ability.IsA('Hat_Ability_FoxMask') && Hat_Player(Player) != None && Hat_Player(Player).HasStatusEffect(class'Crowd_StatusEffect_DwellerSphere'))
+    {
+        Hat_Ability_FoxMask(Ability).Activated = false;
+    }
+}
+
+//Save Persistent Status Effect.
 static function SaveStatusEffect(string className, int pid, float duration, string data)
 {
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("Saving: "$"persistentStatus;"$className$";"$pid$";"$duration$";"$data);
 	class'Hat_SaveBitHelper'.static.SetLevelBits(locs("persistentStatus;"$className$";"$pid$";"$duration$";"$data), 1, "CrowdControl");
 }
 
+//Load and Apply Persistent Status Effects.
 static function LoadStatusEffects(Hat_Player ply)
 {
 	local Hat_SaveGame_Base s;
@@ -290,6 +272,7 @@ static function LoadStatusEffects(Hat_Player ply)
     WipeStatusEffects();
 }
 
+//Delete Save Bits for Persistent Status Effects after loading.
 static function WipeStatusEffects()
 {
 	local Hat_SaveGame_Base s;
@@ -305,6 +288,7 @@ static function WipeStatusEffects()
     s.LevelSaveInfo[i].LevelBits.Length = 0;
 }
 
+// Give or Take a random TimePiece
 function bool GiveTakeRandomTimePiece(bool Unlock)
 {
     local int rand;
@@ -336,6 +320,7 @@ function bool GiveTakeRandomTimePiece(bool Unlock)
     return result;
 }
 
+// Give or Take a random TimePiece
 function bool UnlockRandomTimePiece(Hat_ChapterInfo ci, bool Unlock)
 {
 	local int rand;
@@ -385,6 +370,7 @@ function bool UnlockRandomTimePiece(Hat_ChapterInfo ci, bool Unlock)
     }
 }
 
+//Unlock Power Panels in HUB after gaining a timepiece
 function UnlockPowerPanels()
 {
     local Hat_SpaceshipPowerPanel pan;
@@ -407,6 +393,7 @@ function UnlockPowerPanels()
 	}
 }
 
+//Lock Power Panels in HUB after removing a timepiece
 function LockPowerPanels()
 {
     local Hat_SpaceshipPowerPanel pan;
@@ -429,6 +416,7 @@ function LockPowerPanels()
 	}
 }
 
+//Check if All Acts in a chapter have been completed.
 static function bool AreAllActsComplete(Hat_ChapterInfo ChapterInfo, optional bool IncludeUnownedDLC = true)
 {
     local int i;
@@ -449,6 +437,7 @@ static function bool AreAllActsComplete(Hat_ChapterInfo ChapterInfo, optional bo
 	return true;
 }
 
+//Check if No Acts in a chapter have been completed yet.
 static function bool AreNoActsComplete(Hat_ChapterInfo ChapterInfo, optional bool IncludeUnownedDLC = true)
 {
     local int i;
@@ -468,6 +457,25 @@ static function bool AreNoActsComplete(Hat_ChapterInfo ChapterInfo, optional boo
 	return true;
 }
 
+//Helper function to get a reference to the gamemod in a static way.
+static function Crowd_CrowdControl_Gamemod GetGameMod()
+{
+    local Crowd_CrowdControl_Gamemod mod;
+
+    foreach class'WorldInfo'.static.GetWorldInfo().DynamicActors(class'Crowd_CrowdControl_Gamemod', mod)
+    {
+		return mod;
+    }
+    
+    return None;
+}
+
+//Function to simplify logging messages to the dev console.
+//This will only log messages to the dev console if Debug flag is set to true.
+static function DebugLog(String s)
+{
+    if (Debug) class'WorldInfo'.static.GetWorldInfo().Game.Broadcast(class'Crowd_CrowdControl_Gamemod'.static.GetGameMod().GetALocalPlayerController().Pawn, s);
+}
 
 defaultproperties
 {
