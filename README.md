@@ -15,9 +15,9 @@ In addition to this mod, you will also need the CC Twitch extension and CC deskt
 * **Increase Gravity (20 sec)** - Increase gravity so the Player is heavier and can't jump as high for 20 seconds.
 * **Decrease Gravity (30 sec)** - Decrease gravity so the Player is lighter and will jump higher for the next 30 seconds.
 * **Wind (15 sec)** - Apply a constant gust of wind in a random direction for the next 15 seconds.
-* **Spring World (20 sec)** - Give the entire world properties of a spring so the Player will not stop bouncing for the next 20 seconds.
+* **Spring World (10 sec)** - Give the entire world properties of a spring so the Player will not stop bouncing for the next 20 seconds.
 * **Give Triple Jump (25 sec)** - Give the Player a third jump for the next 25 seconds.
-* **Disable Jump (15 sec)** - Disable the Player's ability to jump for 15 seconds.
+* **Disable Jump (7 sec)** - Disable the Player's ability to jump for 15 seconds.
 * **Disable Double Jump (15 sec)** - Take away the Player's double jump for the next 15 seconds.
 * **Disable Weapon (15 sec)** - Take away the Player's weapon for the next 15 seconds.
 * **Lose Hat (20 sec)** - Make it so the Player can't use hat abilities for the next 20 seconds.
@@ -27,7 +27,7 @@ In addition to this mod, you will also need the CC Twitch extension and CC deskt
 * **Go Slow (20 sec)** - Make the Player move half as fast as normal.
 * **Force Time Stop (20 sec)** - Give the Player a Time Stop effect for the next 20 seconds. (Basically, the time stop hat without the hat)
 * **Force Dweller Sphere (10 sec)** - Give the Player a Dweller Sphere for the next 10 seconds. (Basically, the fox mask hat without the hat)
-* **Force Ice Statue (10 sec)** - Turn the Player into an Ice Statue for the next 10 seconds. (Basically, the ice hat without the hat)
+* **Force Ice Statue (5 sec)** - Turn the Player into an Ice Statue for the next 10 seconds. (Basically, the ice hat without the hat)
 * **Shrink (30 sec)** - Shrink the Player down for the next 30 seconds.
 * **Grow (30 sec)** - Make the Player Grow for the next 30 seconds.
 * **Make Invisible (20 sec)** - Make the Player turn Invisible for the next 20 seconds.

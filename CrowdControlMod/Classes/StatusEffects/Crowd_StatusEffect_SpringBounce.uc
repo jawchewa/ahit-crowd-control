@@ -6,7 +6,7 @@ var Interaction KeyCaptureInteraction;
 
 defaultproperties
 {
-    Duration = 20;
+    Duration = 10;
 }
 
 function OnLanded(optional bool UnusualScenario)

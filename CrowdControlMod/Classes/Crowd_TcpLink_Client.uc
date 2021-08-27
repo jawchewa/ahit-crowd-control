@@ -43,6 +43,18 @@ event Opened()
 
 event Closed()
 {
+    local string responseText;
+    local byte responseData[255];
+    local int i;
+
+    responseText = "Close";
+    for(i = 0; i < Len(responseText); i++)
+    {
+        responseData[i] = Asc(Mid(responseText, i, 1));
+    }
+    responseData[Len(responseText)] = 0;
+    SendBinary(Len(responseText) + 1, responseData);
+
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] event closed");
 }
 
@@ -60,9 +72,12 @@ event ReceivedBinary(int Count, byte B[255])
     local string responseText;
     local byte responseData[255];
     local int i;
+    local float timeRemaining;
 
     local bool hitTerminator;
     local string ReceivedText;
+
+    timeRemaining = -1;
 
     for (i = 0; i < Count; i++)
     {
@@ -87,12 +102,16 @@ event ReceivedBinary(int Count, byte B[255])
     ParsedJson = class'JsonObject'.static.DecodeJson(ReceivedText);
     if (ParsedJson == None) return;
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] Received command: "$ParsedJson.GetStringValue("code"));
-    responseCode = class'Crowd_CrowdControl_Gamemod'.static.GetGameMod().ProcessCode(ParsedJson.GetStringValue("code"));
+    responseCode = class'Crowd_CrowdControl_Gamemod'.static.GetGameMod().ProcessCode(ParsedJson.GetStringValue("code"), ParsedJson.GetIntValue("id"), timeRemaining);
 
     Result = new class'JsonObject';
     Result.SetIntValue("id", ParsedJson.GetIntValue("id"));
     Result.SetIntValue("status", responseCode);
     Result.SetStringValue("message", "");
+    if (timeRemaining > 0)
+    {
+        Result.SetIntValue("timeRemaining", timeRemaining * 1000);
+    }
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] Sending command: "$class'JsonObject'.static.EncodeJson(Result));
 
     //Unrealscript doesn't let you have null characters in strings, so to be able to work with the SimpleTCPConnector, We have to convert from a string to

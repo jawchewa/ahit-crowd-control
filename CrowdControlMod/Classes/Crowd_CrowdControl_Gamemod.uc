@@ -14,13 +14,14 @@ var Array<Hat_ChapterInfo> Chapters;
 const Debug = false;
 
 //This is the main function for processing incoming Effect Requests.
-function int ProcessCode(String code)
+function int ProcessCode(String code, int id, out float timeRemaining)
 {
     local Hat_Player ply;
+    local Crowd_StatusEffect_Persistent effect;
     ply = Hat_Player(GetALocalPlayerController().Pawn);
 
     //Don't receive Effects until level is done loading, and deny Effects if game is paused.
-    if(!hasStartedLevel || GetALocalPlayerController().IsPaused()) return 3;
+    if(!hasStartedLevel || GetALocalPlayerController().IsPaused() || CannotGiveEffect(ply)) return 3;
 
     switch (code)
     {
@@ -40,103 +41,103 @@ function int ProcessCode(String code)
             break;
         case "make_invincible":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_Invincible') || ply.HasStatusEffect(class'Crowd_StatusEffect_OneHitHero')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_Invincible');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_Invincible'));
             break;
         case "one_hit_hero":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_Invincible') || ply.HasStatusEffect(class'Crowd_StatusEffect_OneHitHero')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_OneHitHero');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_OneHitHero'));
             break;
         case "increase_gravity":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_DoubleGravity') || ply.HasStatusEffect(class'Crowd_StatusEffect_HalfGravity')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_DoubleGravity');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_DoubleGravity'));
             break;
         case "decrease_gravity":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_DoubleGravity') || ply.HasStatusEffect(class'Crowd_StatusEffect_HalfGravity')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_HalfGravity');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_HalfGravity'));
             break;
         case "wind":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_Wind')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_Wind');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_Wind'));
             break;
         case "spring_bounce":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_SpringBounce')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_SpringBounce');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_SpringBounce'));
             break;
         case "go_fast":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_Fast') || ply.HasStatusEffect(class'Crowd_StatusEffect_Slow')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_Fast');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_Fast'));
             break;
         case "go_slow":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_Fast') || ply.HasStatusEffect(class'Crowd_StatusEffect_Slow')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_Slow');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_Slow'));
             break;
         case "time_stop":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_TimeStop') || ply.HasStatusEffect(class'Hat_StatusEffect_TimeStop', true)) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_TimeStop');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_TimeStop'));
             break;
         case "dweller_sphere":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_DwellerSphere') || ply.IsFoxMaskActive) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_DwellerSphere');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_DwellerSphere'));
             break;
         case "ice_statue":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_IceStatue') || ply.HasStatusEffect(class'Hat_StatusEffect_StatueFall', true)) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_IceStatue');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_IceStatue'));
             break;
         case "shrink":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_Shrink') || ply.HasStatusEffect(class'Crowd_StatusEffect_Grow')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_Shrink');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_Shrink'));
             break;
         case "grow":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_Shrink') || ply.HasStatusEffect(class'Crowd_StatusEffect_Grow')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_Grow');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_Grow'));
             break;
         case "make_invisible":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_MakeInvisible')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_MakeInvisible');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_MakeInvisible'));
             break;
         case "babysit":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_BabyMode')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_BabyMode');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_BabyMode'));
             break;
         case "give_triple_jump":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_TripleJump') || ply.HasStatusEffect(class'Crowd_StatusEffect_NoJump') || ply.HasStatusEffect(class'Crowd_StatusEffect_NoDoubleJump')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_TripleJump');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_TripleJump'));
             break;
         case "disable_jump":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_TripleJump') || ply.HasStatusEffect(class'Crowd_StatusEffect_NoJump') || ply.HasStatusEffect(class'Crowd_StatusEffect_NoDoubleJump')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_NoJump');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_NoJump'));
             break;
         case "disable_double_jump":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_TripleJump') || ply.HasStatusEffect(class'Crowd_StatusEffect_NoJump') || ply.HasStatusEffect(class'Crowd_StatusEffect_NoDoubleJump')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_NoDoubleJump');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_NoDoubleJump'));
             break;
         case "disable_weapon":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_NoWeapon') || ply.GetWeapon() == None) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_NoWeapon');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_NoWeapon'));
             break;
         case "random_filter":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_RandomFilter')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_RandomFilter');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_RandomFilter'));
             break;
         case "parade_owls":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_Parade')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_Parade');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_Parade'));
             break;
         case "lose_hat":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_LoseHat')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_LoseHat');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_LoseHat'));
             break;
         case "first_person":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_FirstPerson')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_FirstPerson');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_FirstPerson'));
             break;
-            case "reverse_controls":
+        case "reverse_controls":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_ReverseControls')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_ReverseControls');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_ReverseControls'));
             break;
         case "mirror_mode":
             if(ply.HasStatusEffect(class'Crowd_StatusEffect_MirrorMode')) return 3;
-            ply.giveStatusEffect(class'Crowd_StatusEffect_MirrorMode');
+            effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_MirrorMode'));
             break;
         case "give_timepiece":
             if(!GiveTakeRandomTimePiece(true)) return 2;
@@ -147,8 +148,42 @@ function int ProcessCode(String code)
         default:
             break;
     }
+    if (effect != None)
+    {
+        timeRemaining = effect.Duration;
+        effect.id = id;
+    }
 
     return 0;
+}
+
+function bool CannotGiveEffect(Hat_Player player)
+{
+	local Hat_PlayerController cont;
+
+	if (player.Health <= 0) return true;
+	if (player.Health <= 0) return true;
+	if (player.bWaitingForCaveRiftIntro) return true;
+	if (player.IsTaunting()) return true;
+	if (player.IsNewItemState()) return true;
+	if (player.MyDoor != None) return true;
+	if (player.bHidden && !player.bCollideWorld && !player.bBlockActors) return true;
+	if (player.bHidden && player.CanTakeDamage(false)) return true;
+	if (player.SwampSinkProgress > 0.75) return true;
+	if (player.HasStatusEffect(class'Hat_StatusEffect_FreezeMovement', true)) return true;
+	if (player.HasStatusEffect(class'Hat_StatusEffect_Scared', true)) return true;
+	if (player.HasStatusEffect(class'Hat_StatusEffect_Stoning', true)) return true;
+	if (player.HasStatusEffect(class'Hat_StatusEffect_FallHurtTransition', true)) return true;
+
+	cont = Hat_PlayerController(player.Controller);
+	if (cont == None) return true;
+	if (cont.IsTalking()) return true;
+    if (cont.bCinematicMode) return true;
+	if (Hat_HUD(cont.myHUD).IsHUDEnabled('Hat_HUDElementActTitleCard')) return true;
+	if (Hat_HUD(cont.myHUD).IsHUDEnabled('Hat_HUDElementLoadingScreen')) return true;
+	if (Hat_HUD(cont.MyHUD).ElementsDisablesMovement() && !Hat_HUD(cont.myHUD).IsHUDEnabled('Hat_HUDMenu_SwapHat')) return true;
+
+	return false;
 }
 
 //Spawn and Initialize the TCP Link Client when the mod is loaded.

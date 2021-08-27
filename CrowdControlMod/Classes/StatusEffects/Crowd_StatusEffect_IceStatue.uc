@@ -9,7 +9,7 @@ var(Sounds) SoundCue EndStatueSound;
 
 defaultproperties
 {
-	Duration = 10;
+	Duration = 5;
 	StartStatueSound = SoundCue'HatinTime_SFX_Player3.SoundCues.Ice_Statue_Badge_Activate1_Overlay'
 }
 

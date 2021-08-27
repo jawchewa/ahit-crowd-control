@@ -1,9 +1,9 @@
-// Disable the Player's ability to jump for 15 seconds.
+// Disable the Player's ability to jump for 7 seconds.
 class Crowd_StatusEffect_NoJump extends Crowd_StatusEffect_Persistent;
 
 defaultproperties
 {
-    Duration = 15;
+    Duration = 7;
 }
 
 function bool Update(float delta)
