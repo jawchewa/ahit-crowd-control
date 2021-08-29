@@ -11,7 +11,7 @@ var bool hasStartedLevel;
 
 var Array<Hat_ChapterInfo> Chapters;
 
-const Debug = true;
+const Debug = false;
 
 //This is the main function for processing incoming Effect Requests.
 function int ProcessCode(String code, int id, out float timeRemaining)

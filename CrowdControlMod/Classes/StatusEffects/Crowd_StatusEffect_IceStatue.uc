@@ -9,7 +9,7 @@ var(Sounds) SoundCue EndStatueSound;
 
 defaultproperties
 {
-	Duration = 5;
+	Duration = 10;
 	StartStatueSound = SoundCue'HatinTime_SFX_Player3.SoundCues.Ice_Statue_Badge_Activate1_Overlay'
 }
 
@@ -23,7 +23,7 @@ function OnAdded(Actor a)
 	if (StartStatueSound != None)
 		Owner.PlaySound(StartStatueSound);
 
-	fx = Hat_StatusEffect_StatueFall(Hat_PawnCombat(Owner).GiveStatusEffect(class'Hat_StatusEffect_StatueFall'));
+	fx = Hat_StatusEffect_StatueFall(Hat_PawnCombat(Owner).GiveStatusEffect(class'Hat_StatusEffect_StatueFall', 10));
 	fx.StatueHealth = 1000;
 }
 
