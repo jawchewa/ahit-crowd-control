@@ -112,12 +112,36 @@ event ReceivedBinary(int Count, byte B[255])
     {
         Result.SetIntValue("timeRemaining", timeRemaining * 1000);
     }
-    class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] Sending command: "$class'JsonObject'.static.EncodeJson(Result));
 
     //Unrealscript doesn't let you have null characters in strings, so to be able to work with the SimpleTCPConnector, We have to convert from a string to
     //a byte array, and send the data that way with a 0 character added at the end. There also isn't a simple way to convert from a string to a byte array, so
     //I have to build the byte array manually. This will also break if the response message is more than 256 characters, but currently that's not possible.
     responseText = class'JsonObject'.static.EncodeJson(Result);
+    class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] Sending command: "$responseText);
+
+    for(i = 0; i < Len(responseText); i++)
+    {
+        responseData[i] = Asc(Mid(responseText, i, 1));
+    }
+    responseData[Len(responseText)] = 0;
+    SendBinary(Len(responseText) + 1, responseData);
+}
+
+event UpdateTimedEffect(int id, int status, float currentDuration)
+{
+    local JsonObject Result;
+    local string responseText;
+    local byte responseData[255];
+    local int i;
+
+    Result = new class'JsonObject';
+    Result.SetIntValue("id", id);
+    Result.SetIntValue("status", status);
+    Result.SetIntValue("timeRemaining", currentDuration * 1000);
+
+    responseText = class'JsonObject'.static.EncodeJson(Result);
+    class'Crowd_CrowdControl_Gamemod'.static.DebugLog("[TcpLinkClient] Sending command: "$responseText);
+
     for(i = 0; i < Len(responseText); i++)
     {
         responseData[i] = Asc(Mid(responseText, i, 1));

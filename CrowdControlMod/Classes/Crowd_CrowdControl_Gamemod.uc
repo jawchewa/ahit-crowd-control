@@ -11,7 +11,7 @@ var bool hasStartedLevel;
 
 var Array<Hat_ChapterInfo> Chapters;
 
-const Debug = false;
+const Debug = true;
 
 //This is the main function for processing incoming Effect Requests.
 function int ProcessCode(String code, int id, out float timeRemaining)
@@ -263,10 +263,10 @@ function OnAbilityUsed(Pawn Player, Inventory Ability)
 }
 
 //Save Persistent Status Effect.
-static function SaveStatusEffect(string className, int pid, float duration, string data)
+static function SaveStatusEffect(string className, int pid, float duration, string data, int id)
 {
-    class'Crowd_CrowdControl_Gamemod'.static.DebugLog("Saving: "$"persistentStatus;"$className$";"$pid$";"$duration$";"$data);
-	class'Hat_SaveBitHelper'.static.SetLevelBits(locs("persistentStatus;"$className$";"$pid$";"$duration$";"$data), 1, "CrowdControl");
+    class'Crowd_CrowdControl_Gamemod'.static.DebugLog("Saving: "$"persistentStatus;"$className$";"$pid$";"$duration$";"$data$";"$id);
+	class'Hat_SaveBitHelper'.static.SetLevelBits(locs("persistentStatus;"$className$";"$pid$";"$duration$";"$data$";"$id), 1, "CrowdControl");
 }
 
 //Load and Apply Persistent Status Effects.
@@ -300,6 +300,8 @@ static function LoadStatusEffects(Hat_Player ply)
                 {
                     effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(statusEffectClass, Float(arr[3])));
                     effect.SetData(arr[4]);
+                    effect.id = Int(arr[5]);
+                    class'Crowd_CrowdControl_Gamemod'.static.GetGameMod().client.UpdateTimedEffect(effect.id, 7, effect.Duration - effect.CurrentDuration);
                 }
             }
 		}
@@ -503,6 +505,50 @@ static function Crowd_CrowdControl_Gamemod GetGameMod()
     }
     
     return None;
+}
+
+function OnPreOpenHUD(HUD InHUD, out class<Object> InHUDElement)
+{
+	local Hat_PlayerController c;
+	local Hat_HUD hHUD;
+	local Hat_StatusEffect fx;
+	local Crowd_StatusEffect_Persistent pfx;
+
+    c = Hat_PlayerController(GetALocalPlayerController());
+
+    hHUD = Hat_HUD(c.MyHUD);
+
+    if (hHUD == None) return;
+    
+    //This sets up the pause menu to not actually pause the game in the background, so players can't just cheat by pausing the game. This also helps with syncing
+    if(InHUDElement == class'Hat_HUDMenuLoadout' || ClassIsChildOf(InHUDElement, class'Hat_HUDMenuLoadout'))
+    {
+        //If pause menu is not open, that means we are opening it. If a pause menu already exists, that means we are closing it.
+        if(hHUD.GetHUD(class<Hat_HUDMenuLoadout>(InHUDElement)) == None)
+        {
+            //Pause
+            foreach Hat_PawnCombat(c.Pawn).StatusEffects(fx)
+            {
+			    if (Crowd_StatusEffect_Persistent(fx) != None)
+                {
+                    pfx = Crowd_StatusEffect_Persistent(fx);
+                    class'Crowd_CrowdControl_Gamemod'.static.GetGameMod().client.UpdateTimedEffect(pfx.id, 6, pfx.Duration - pfx.CurrentDuration);
+                }
+            }
+        }
+        else 
+        {
+            //UnPause
+            foreach Hat_PawnCombat(c.Pawn).StatusEffects(fx)
+            {
+                if (Crowd_StatusEffect_Persistent(fx) != None)
+                {
+                    pfx = Crowd_StatusEffect_Persistent(fx);
+                    class'Crowd_CrowdControl_Gamemod'.static.GetGameMod().client.UpdateTimedEffect(pfx.id, 7, pfx.Duration - pfx.CurrentDuration);
+                }
+            }
+        }
+    }
 }
 
 //Function to simplify logging messages to the dev console.
