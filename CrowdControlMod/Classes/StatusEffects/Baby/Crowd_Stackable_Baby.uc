@@ -40,16 +40,13 @@ defaultproperties
 
 function bool CanBePicked()
 {
-	if (!CanBeCarried) return false;
     if (IsBeingCarried()) return false;
-    if (Physics == Phys_Interpolating) return false;
 	return true;
 }
 
 function bool CanBeInteractedWith(Actor a)
 {
-	if (!CanBePicked()) return false;
-	return true;
+    return false;
 }
 
 function OnSpawn()

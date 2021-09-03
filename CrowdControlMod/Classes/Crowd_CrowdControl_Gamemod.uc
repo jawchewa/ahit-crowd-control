@@ -32,7 +32,7 @@ function int ProcessCode(String code, int id, out float timeRemaining)
             }
             break;
         case "damage":
-            if(ply.HasStatusEffect(class'Crowd_StatusEffect_Invincible') || ply.HasStatusEffect(class'Crowd_StatusEffect_OneHitHero')) return 3;
+            if(ply.HasStatusEffect(class'Crowd_StatusEffect_Invincible') || ply.HasStatusEffect(class'Crowd_StatusEffect_OneHitHero') || ply.health == 1) return 3;
             ply.TakeDamage(1.0, None, Location, vect(0,0,0), class'Hat_DamageType_Bump');
             break;
         case "kill":
@@ -96,7 +96,7 @@ function int ProcessCode(String code, int id, out float timeRemaining)
             effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_MakeInvisible'));
             break;
         case "babysit":
-            if(ply.HasStatusEffect(class'Crowd_StatusEffect_BabyMode')) return 3;
+            if(ply.HasStatusEffect(class'Crowd_StatusEffect_BabyMode') || ply.IsCarryingItem()) return 3;
             effect = Crowd_StatusEffect_Persistent(ply.giveStatusEffect(class'Crowd_StatusEffect_BabyMode'));
             break;
         case "give_triple_jump":
