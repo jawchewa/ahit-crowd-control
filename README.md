@@ -4,7 +4,9 @@ NOTE: This mod is still under development and is not officially supported by Cro
 
 This mod adds Crowd Control support for the cute-as-heck indie platformer, A Hat in Time. Crowd Control is a Twitch extension that allows Twitch chat to convert bits, subs and channel points to coins, in exchange for effects. Check out https://crowdcontrol.live/ for more info.  
 
-In addition to this mod, you will also need the CC Twitch extension and CC desktop app. Take a look at our Twitch extension setup here: https://crowdcontrol.live/setup
+In addition to this mod, you will also need the CC Twitch extension and CC desktop app. Take a look at our Twitch extension setup here:
+https://crowdcontrol.live/setup
+https://forum.warp.world/t/a-hat-in-time-pc/24014
 
 ### Current List of Effects (Since this is in development, times are not final):
 * **Give Health** - Restore 1 health to the player.
