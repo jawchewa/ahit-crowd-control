@@ -6,6 +6,7 @@ This mod adds Crowd Control support for the cute-as-heck indie platformer, A Hat
 
 In addition to this mod, you will also need the CC Twitch extension and CC desktop app. Take a look at our Twitch extension setup here:
 https://crowdcontrol.live/setup
+
 https://forum.warp.world/t/a-hat-in-time-pc/24014
 
 ### Current List of Effects (Since this is in development, times are not final):
