@@ -53,8 +53,8 @@ function bool InDialog(Hat_Player player)
 	if (player.IsTaunting()) return true;
 	if (player.IsNewItemState()) return true;
 	if (player.MyDoor != None) return true;
-	if (player.bHidden && !player.bCollideWorld && !player.bBlockActors) return true;
-	if (player.bHidden && player.CanTakeDamage(false)) return true;
+	if ((player.bHidden && !player.HasStatusEffect(class'Crowd_StatusEffect_MakeInvisible')) && !player.bCollideWorld && !player.bBlockActors) return true;
+	if ((player.bHidden && !player.HasStatusEffect(class'Crowd_StatusEffect_MakeInvisible')) && player.CanTakeDamage(false)) return true;
 	if (player.HasStatusEffect(class'Hat_StatusEffect_FreezeMovement', true)) return true;
 	if (player.HasStatusEffect(class'Hat_StatusEffect_Scared', true)) return true;
 	if (player.HasStatusEffect(class'Hat_StatusEffect_Stoning', true)) return true;
