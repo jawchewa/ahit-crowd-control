@@ -240,7 +240,7 @@ simulated event Tick(float d)
 	if (bHidden) return;
 
 	if (MimickActor != None && !MimickActor.IsTicking()) return;
-	if (MimickActor != None && ShouldFreeze(Hat_Player(MimickActor))) return;
+	if (MimickActor != None && class'Crowd_CrowdControl_Gamemod'.static.CannotGiveEffect(Hat_Player(MimickActor))) return;
 
 	if (MimickActor != None)
 	{
@@ -529,30 +529,4 @@ simulated function UpdateDropDown(float d)
 			a.Play();
 		}
 	}
-}
-
-function bool ShouldFreeze(Hat_Player player)
-{
-	local Hat_PlayerController cont;
-
-	if (player.Health <= 0) return true;
-	if (player.bWaitingForCaveRiftIntro) return true;
-	if (player.IsTaunting()) return true;
-	if (player.IsNewItemState()) return true;
-	if (player.MyDoor != None) return true;
-	if (player.bHidden && !player.bCollideWorld && !player.bBlockActors) return true;
-	if (player.bHidden && player.CanTakeDamage(false)) return true;
-	if (player.SwampSinkProgress > 0.75) return true;
-	if (player.HasStatusEffect(class'Hat_StatusEffect_FreezeMovement', true)) return true;
-	if (player.HasStatusEffect(class'Hat_StatusEffect_Scared', true)) return true;
-	if (player.HasStatusEffect(class'Hat_StatusEffect_Stoning', true)) return true;
-	if (player.HasStatusEffect(class'Hat_StatusEffect_FallHurtTransition', true)) return true;
-	cont = Hat_PlayerController(player.Controller);
-	if (cont == None) return true;
-	if (cont.IsTalking()) return true;
-	if (Hat_HUD(cont.myHUD).IsHUDEnabled('Hat_HUDElementActTitleCard')) return true;
-	if (Hat_HUD(cont.myHUD).IsHUDEnabled('Hat_HUDElementLoadingScreen')) return true;
-	if (Hat_HUD(cont.MyHUD).ElementsDisablesMovement() && !Hat_HUD(cont.myHUD).IsHUDEnabled('Hat_HUDMenu_SwapHat')) return true;
-
-	return false;
 }

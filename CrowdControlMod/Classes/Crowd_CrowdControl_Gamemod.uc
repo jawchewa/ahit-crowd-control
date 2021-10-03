@@ -157,7 +157,7 @@ function int ProcessCode(String code, int id, out float timeRemaining)
     return 0;
 }
 
-function bool CannotGiveEffect(Hat_Player player)
+function static bool CannotGiveEffect(Hat_Player player)
 {
 	local Hat_PlayerController cont;
 
@@ -167,8 +167,8 @@ function bool CannotGiveEffect(Hat_Player player)
 	if (player.IsTaunting()) return true;
 	if (player.IsNewItemState()) return true;
 	if (player.MyDoor != None) return true;
-	if (player.bHidden && !player.bCollideWorld && !player.bBlockActors) return true;
-	if (player.bHidden && player.CanTakeDamage(false)) return true;
+	if ((player.bHidden && !player.HasStatusEffect(class'Crowd_StatusEffect_MakeInvisible')) && !player.bCollideWorld && !player.bBlockActors) return true;
+	if ((player.bHidden && !player.HasStatusEffect(class'Crowd_StatusEffect_MakeInvisible')) && player.CanTakeDamage(false)) return true;
 	if (player.SwampSinkProgress > 0.75) return true;
 	if (player.HasStatusEffect(class'Hat_StatusEffect_FreezeMovement', true)) return true;
 	if (player.HasStatusEffect(class'Hat_StatusEffect_Scared', true)) return true;
@@ -236,8 +236,20 @@ event OnModUnloaded()
 //Also, Load persistent status effects after Level Intro.
 function OnPostLevelIntro()
 {
-    hasStartedLevel = true;
-    LoadStatusEffects(Hat_Player(GetALocalPlayerController().Pawn));
+    if(`GameManager.HasLevelIntro())
+    {
+        hasStartedLevel = true;
+        LoadStatusEffects(Hat_Player(GetALocalPlayerController().Pawn));
+    }
+}
+
+function OnPostInitGame()
+{
+    if(!`GameManager.HasLevelIntro())
+    {
+        hasStartedLevel = true;
+        LoadStatusEffects(Hat_Player(GetALocalPlayerController().Pawn));
+    }
 }
 
 // Don't allow base game Timestop and StatueFall status effects to be activated if custom version is activated.
@@ -267,6 +279,7 @@ static function SaveStatusEffect(string className, int pid, float duration, stri
 {
     class'Crowd_CrowdControl_Gamemod'.static.DebugLog("Saving: "$"persistentStatus;"$className$";"$pid$";"$duration$";"$data$";"$id);
 	class'Hat_SaveBitHelper'.static.SetLevelBits(locs("persistentStatus;"$className$";"$pid$";"$duration$";"$data$";"$id), 1, "CrowdControl");
+    class'Crowd_CrowdControl_Gamemod'.static.GetGameMod().client.UpdateTimedEffect(pfx.id, 6, duration);
 }
 
 //Load and Apply Persistent Status Effects.

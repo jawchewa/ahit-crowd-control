@@ -33,7 +33,7 @@ function IntroTimer()
 {
     local Crowd_Enemy_Band bird;
     local int i;
-    if (!CannotSpawn(Hat_Player(Owner)))
+    if (!class'Crowd_CrowdControl_Gamemod'.static.CannotGiveEffect(Hat_Player(Owner)))
     {
         bird = Owner.Spawn(class'Crowd_Enemy_Band',,,Owner.Location - vector(Owner.Rotation) * 300);
         bird.MimicDelay = 0.75;
@@ -66,7 +66,7 @@ function SpawnBird()
 
         return;
     }
-    if(!CannotSpawn(Hat_Player(Owner)))
+    if(!class'Crowd_CrowdControl_Gamemod'.static.CannotGiveEffect(Hat_Player(Owner)))
     {
         if(currentBird < birds.length)
         {
@@ -80,33 +80,4 @@ function SpawnBird()
         birds[currentBird].Active = true;
         currentBird++;
     }
-}
-
-function bool CannotSpawn(Hat_Player player)
-{
-	local Hat_PlayerController cont;
-
-	if (player.Health <= 0) return true;
-	if (player.Health <= 0) return true;
-	if (player.bWaitingForCaveRiftIntro) return true;
-	if (player.IsTaunting()) return true;
-	if (player.IsNewItemState()) return true;
-	if (player.MyDoor != None) return true;
-	if (player.bHidden && !player.bCollideWorld && !player.bBlockActors) return true;
-	if (player.bHidden && player.CanTakeDamage(false)) return true;
-	if (player.SwampSinkProgress > 0.75) return true;
-	if (player.HasStatusEffect(class'Hat_StatusEffect_FreezeMovement', true)) return true;
-	if (player.HasStatusEffect(class'Hat_StatusEffect_Scared', true)) return true;
-	if (player.HasStatusEffect(class'Hat_StatusEffect_Stoning', true)) return true;
-	if (player.HasStatusEffect(class'Hat_StatusEffect_FallHurtTransition', true)) return true;
-
-	cont = Hat_PlayerController(player.Controller);
-	if (cont == None) return true;
-	if (cont.IsTalking()) return true;
-    if (cont.bCinematicMode) return true;
-	if (Hat_HUD(cont.myHUD).IsHUDEnabled('Hat_HUDElementActTitleCard')) return true;
-	if (Hat_HUD(cont.myHUD).IsHUDEnabled('Hat_HUDElementLoadingScreen')) return true;
-	if (Hat_HUD(cont.MyHUD).ElementsDisablesMovement() && !Hat_HUD(cont.myHUD).IsHUDEnabled('Hat_HUDMenu_SwapHat')) return true;
-
-	return false;
 }
